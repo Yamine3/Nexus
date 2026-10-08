@@ -11,7 +11,7 @@ import SwiftUI
 struct nexusApp: App {
     var body: some Scene {
         WindowGroup {
-            WorkshopsView()
+            WorkshopsView(workshop: w[0])
         }
     }
 }
