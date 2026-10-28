@@ -18,10 +18,12 @@ struct ReservationModel: Hashable, Identifiable {
     let workshop : WorkshopModel
     let status : StatusEnum
 }
-
-let r: [ReservationModel] = [
-    ReservationModel(workshop: w[0], status: .valide),
-    ReservationModel(workshop: w[1], status: .valide),
-    ReservationModel(workshop: w[2], status: .valide),
-    ReservationModel(workshop: w[3], status: .valide)
-]
+//
+//let r: [ReservationModel] = [
+//    /*
+//    ReservationModel(workshop: w[0], status: .valide),
+//    ReservationModel(workshop: w[1], status: .valide),
+//    ReservationModel(workshop: w[2], status: .valide),
+//    ReservationModel(workshop: w[3], status: .valide)
+//     */
+//]
