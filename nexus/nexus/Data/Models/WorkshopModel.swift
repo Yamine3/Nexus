@@ -4,9 +4,20 @@
 //
 //  Created by Apprenant 109 on 08/10/2026.
 //
-import SwiftUI
+//import SwiftUI
 import Foundation
 
+struct WorkshopModel: Decodable, Hashable, Identifiable {
+    let id: UUID
+    let name: String
+    let startTime: Date
+    let endTime: Date
+    let capacityMax: Int
+    let remainingPlaces: Int
+    let category: String
+}
+
+/*
 struct WorkshopModel: Hashable, Identifiable {
     let id = UUID()
     var title : String
@@ -25,3 +36,4 @@ let w: [WorkshopModel] = [
     WorkshopModel(title: "Workshop 4", date: .now, startTime: .now, endTime: .now, capacityMax: 3, totalSubscribers: 3, description: "Description 4"),
     WorkshopModel(title: "Workshop 5", date: .now, startTime: .now, endTime: .now, capacityMax: 3, totalSubscribers: 3, description: "Description 5")
 ]
+*/
