@@ -32,7 +32,8 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Name")
                                 
-                                authentificationTextField(placeholderLogin: "Enter your name", textInTextField: name)
+                                authentificationTextField(placeholderLogin: "Enter your name", textInTextField:
+                                                    $name)
                                 
                             }
                             
@@ -40,7 +41,7 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Email address")
                                 
-                                authentificationTextField(placeholderLogin: "Enter your email", textInTextField: name)
+                                authentificationTextField(placeholderLogin: "Enter your email", textInTextField: $name)
                                 
                             }
                             
@@ -48,7 +49,7 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Password")
                                 
-                                authentificationSecureField(placeholderLogin: "Enter your password", textInTextField: email)
+                                authentificationSecureField(placeholderLogin: "Enter your password", textInTextField: $email)
                                 
                             }
                             
@@ -56,7 +57,7 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Retype password")
                                 
-                                authentificationSecureField(placeholderLogin: "Confirm your password", textInTextField: email)
+                                authentificationSecureField(placeholderLogin: "Confirm your password", textInTextField: $email)
                                 
                             }
                         }
