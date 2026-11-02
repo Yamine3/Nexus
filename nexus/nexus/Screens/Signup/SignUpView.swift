@@ -64,7 +64,7 @@ struct SignUpView: View {
                         VStack(spacing: 20) {
                             
                             NavigationLink {
-//                                WorkshopDetail(workshopName: "Intro to Manga Drawing")
+                                WorkshopDetailsView(workshopName: "Intro to Manga Drawing")
                             } label: {
                                 labelButton(label: "Sign-up", labelColor: .accentPurple, background: .white)
                             }

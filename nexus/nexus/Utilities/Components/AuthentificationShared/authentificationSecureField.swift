@@ -10,7 +10,7 @@ import SwiftUI
 struct authentificationSecureField: View {
     
     var placeholderLogin: String
-    @State var textInTextField: String = ""
+    @Binding var textInTextField: String 
     
     var body: some View {
         

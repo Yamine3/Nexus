@@ -62,3 +62,5 @@ struct WorkshopCardComponent: View {
         .padding()
     }
 }
+#Preview {
+}
