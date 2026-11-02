@@ -10,19 +10,23 @@ import SwiftUI
 struct authentificationTextField: View {
     
     var placeholderLogin: String
-    @State var textInTextField: String = ""
+    @Binding var textInTextField: String 
     
     var body: some View {
         
-            TextField("", text: $textInTextField, prompt: Text(placeholderLogin)
-                .foregroundStyle(.white))
-                .font(.custom("Inter18pt-Regular", size: 17))
+        TextField(
+            "",
+            text: $textInTextField,
+            prompt: Text(placeholderLogin)
                 .foregroundStyle(.white)
-                .padding(.leading, 10)
-                .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 15)
-                        .stroke (Color.white, lineWidth: 1)
-                }
+        )
+        .font(.custom("Inter18pt-Regular", size: 17))
+        .foregroundStyle(.white)
+        .padding(.leading, 10)
+        .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
+        .overlay {
+            RoundedRectangle(cornerRadius: 15)
+                .stroke (Color.white, lineWidth: 1)
+        }
     }
 }

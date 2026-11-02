@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @State var email: String = ""
+    @State private var email: String = ""
     @State var password: String = ""
     
     var body: some View {
@@ -30,7 +30,7 @@ struct LoginView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Adress email")
                                 
-                                authentificationTextField(placeholderLogin: "Enter your email", textInTextField: email)
+                                authentificationTextField(placeholderLogin: "Enter your email", textInTextField: $email)
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
                                 
@@ -50,7 +50,7 @@ struct LoginView: View {
                             
                             NavigationLink {
 //                                if email == "staff@test.com" && password == "password123" {
-//                                WorkshopDetail(workshopName: "Intro to Manga Drawing")
+                                WorkshopDetailsView(workshopName: "Intro to Manga Drawing")
 //                                }
                             } label: {
                                 labelButton(label: "Log-in", labelColor: .accentPurple, background: .white)

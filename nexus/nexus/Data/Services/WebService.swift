@@ -10,7 +10,22 @@ final class WebService {
     
     private let session: URLSession
     //pour avoir notre adresse de base de l'api
-    private let baseURL = "http://localhost:8080"
+    
+    private var baseURL: String {
+        //propriété calculée: valeur va dépendre de l'environnement de la compilation
+
+        #if targetEnvironment(simulator)
+        //est-ce que je suis en train de compilier pour le simulateur iOS?
+
+        return "http://127.0.0.1:8080"
+
+        #else
+        //si l'app compile pour un véritable tel
+        return "http://172.33.1.38:8080"
+        //adresse locale réelle du mac
+        #endif
+    }
+    
     
     init(
         session: URLSession = URLSession(
