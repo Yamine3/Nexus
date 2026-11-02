@@ -39,7 +39,7 @@ struct LoginView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Password")
                                 
-                                authentificationSecureField(placeholderLogin: "Enter your password", textInTextField: email)
+                                authentificationSecureField(placeholderLogin: "Enter your password", textInTextField: $email)
                                 
                             }
                         }

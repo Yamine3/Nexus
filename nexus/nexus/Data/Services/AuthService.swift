@@ -26,7 +26,7 @@ final class AuthService {
         )
 
         let response = try await webService.apiCall(
-            endpoint: "/login",
+            endpoint: "/users/login",
             method: .post,
             responseType: LoginDTOResponse.self,
             body: loginRequest
