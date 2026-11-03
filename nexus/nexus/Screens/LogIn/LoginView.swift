@@ -94,4 +94,7 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
+        .environment(
+            AuthService(webService: WebService())
+        )
 }
