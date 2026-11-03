@@ -10,7 +10,7 @@ import Foundation
 @Observable
 final class AuthService {
 
-    private let webService: WebService
+    private var webService: WebService = WebService()
     
     var isLoggedIn: Bool = false
 
