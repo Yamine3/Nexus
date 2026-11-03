@@ -15,16 +15,22 @@ final class WorkshopService {
     
     func fetchWorkshops() async throws -> [WorkshopModel] {
         
+        // récup du JWT depuis le Keychain
+        guard let token = try KeychainManager.read() else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        print("JWT récupéré depuis le Keychain")
+        
         let workshops: [WorkshopModel] = try await webService.apiCall(
             endpoint: "/workshops",
             method: .get,
             responseType: [WorkshopModel].self,
-//            token: token
+            token: token
         )
         return workshops
     }
     
-//    func fetchWorkshopDetails(id: UUID) async throws -> WorkshopDetailModel {
-//
-//    }
+    //    func fetchWorkshopDetails(id: UUID) async throws -> WorkshopDetailModel {
+    //
+    //    }
 }
