@@ -7,14 +7,14 @@
 import SwiftUI
 import Foundation
 
-enum StatusEnum : String, Hashable, CaseIterable {
+enum StatusEnum :String, Decodable, Hashable, CaseIterable {
     case valid = "Valid"
     case pending = "Pending"
     case cancel = "Cancel"
 }
 
-struct ReservationModel: Hashable, Identifiable {
-    let id = UUID()
+struct ReservationModel:Decodable, Hashable, Identifiable {
+    let id : UUID
     let workshop : WorkshopModel
     let status : StatusEnum
 }
