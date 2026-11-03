@@ -35,4 +35,9 @@ final class WorkshopsViewModel {
             print("erreur api:", error)
         }
     }
+    
+    func isWorkshopFull(workshop: WorkshopModel) -> Bool {
+        return workshop.remainingPlaces == 0
+    }
+    
 }
