@@ -14,7 +14,7 @@ struct WorkshopCard: View {
     var isFull: Bool {
         workshop.remainingPlaces == 0
     }
-
+    
     var body: some View {
         ZStack(alignment: .topTrailing) {
             HStack(spacing: 0) {
@@ -51,12 +51,9 @@ struct WorkshopCard: View {
                         
                         Spacer()
                         
-                        NavigationLink {
-                            
-                        } label: {
-                            labelLittleButton(label: isFull ? "Full" : "Details", labelColor: .white, background: isFull ? Color.secondaryGray : .accentPurple)
-                                .frame(width: isFull ? 95 : 105)
-                        }
+                        
+                        labelLittleButton(label: isFull ? "Full" : "Details", labelColor: .white, background: isFull ? Color.secondaryGray : .accentPurple)
+                            .frame(width: isFull ? 95 : 105)
                     }
                 }
                 .padding(.horizontal, 12)
@@ -89,7 +86,7 @@ struct WorkshopCard: View {
         startTime: Calendar.current.date(byAdding: .hour, value: 2, to: Date()) ?? Date(),
         endTime: Calendar.current.date(byAdding: .hour, value: 4, to: Date()) ?? Date(),
         capacityMax: 15,
-        remainingPlaces: 0,
+        remainingPlaces: 3,
         category: "Backend"
     ))
 }

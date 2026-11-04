@@ -9,24 +9,22 @@ import SwiftUI
 
 struct WorkshopsView: View {
     
-    @State private var viewModel = WorkshopsViewModel()
+    @State private var workshopVM = WorkshopsViewModel()
 
     var body: some View {
         NavigationStack {
-            NavigationLink {
-                MyScheduleView()
-            } label: {
-                Text("click")
-            }
             Group {
-                if viewModel.isLoading {
+                if workshopVM.isLoading {
                     ProgressView("Workshops loading...")
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 15) {
-                            ForEach(viewModel.workshops) { workshop in
-                                WorkshopCard(workshop: workshop)
-                            }
+                            ForEach(workshopVM.workshops) { workshop in
+                                NavigationLink {
+                                    WorkshopDetailsView(workshopId: workshop.id)
+                                } label: {
+                                    WorkshopCard(workshop: workshop)
+                                }                           }
                         }
                         .padding(.vertical)
                         .padding(.horizontal, 12)
@@ -36,8 +34,10 @@ struct WorkshopsView: View {
             .navigationTitle("Workshops")
         }
         .task {
-            await viewModel.loadWorkshops()
+            await workshopVM.loadWorkshops()
         }
+        .environment(workshopVM)
+//        .toolbar(.hidden, for: .tabBar)
     }
 }
 

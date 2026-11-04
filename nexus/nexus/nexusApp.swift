@@ -18,7 +18,7 @@ struct nexusApp: App {
         WindowGroup {
             Group {
                 if authService.isLoggedIn {
-                    WorkshopsView()
+                    TabBarView()
                 } else {
                     LoginView()
                 }
