@@ -15,11 +15,15 @@ final class ReservationService {
     
     func fetchReservations() async throws -> [ReservationModel] {
         
+        guard let token = try KeychainManager.read() else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        
         let reservations: [ReservationModel] = try await webService.apiCall(
-            endpoint: "/reservations",
+            endpoint: "/reservations/me",
             method: .get,
             responseType: [ReservationModel].self,
-            //            token: token
+            token: token
         )
         return reservations
     }
@@ -31,7 +35,7 @@ final class ReservationService {
         }
         
         let reservation: ReservationModel = try await webService.apiCall(
-            endpoint: "/reservations",
+            endpoint: "/reservations/me",
             method: .post,
             responseType: ReservationModel.self,
             token: token

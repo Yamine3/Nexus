@@ -13,6 +13,11 @@ struct WorkshopsView: View {
 
     var body: some View {
         NavigationStack {
+            NavigationLink {
+                MyScheduleView()
+            } label: {
+                Text("click")
+            }
             Group {
                 if viewModel.isLoading {
                     ProgressView("Workshops loading...")
