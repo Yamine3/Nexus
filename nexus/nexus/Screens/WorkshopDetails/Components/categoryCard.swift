@@ -18,7 +18,7 @@ struct categoryCard: View {
             .foregroundStyle(.white)
             .padding(.horizontal, 15)
             .padding(.vertical, 10)
-            .background(.accentBlue)
+            .background(.secondaryPurple)
             .cornerRadius(32)
         
     }

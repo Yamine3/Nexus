@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyScheduleView: View {
     
-    @State private var scheduleVM = MyScheduleViewModel()
+    @Environment(MyScheduleViewModel.self) private var scheduleVM
     
     var body: some View {
         NavigationStack {
@@ -36,12 +36,11 @@ struct MyScheduleView: View {
                     }
                 }
             }
-            .navigationTitle("Workshops")
+            .navigationTitle("My Schedule")
         }
         .task {
             await scheduleVM.loadMySchedule()
         }
-        .environment(scheduleVM)
     }
 }
 

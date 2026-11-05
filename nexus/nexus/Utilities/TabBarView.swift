@@ -9,16 +9,21 @@ import SwiftUI
 
 struct TabBarView: View {
     
+    @State private var scheduleVM = MyScheduleViewModel()
+    
     var body: some View {
         TabView {
             Tab("Workshops", systemImage: "sparkles") {
-                WorkshopsView()
+                WorkshopsView(
+                    
+                )
             }
             Tab("My Schedule", systemImage: "ticket") {
                 MyScheduleView()
             }
         }
         .tint(.accentPurple)
+        .environment(scheduleVM)
     }
 }
 

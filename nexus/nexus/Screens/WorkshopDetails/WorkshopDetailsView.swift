@@ -14,6 +14,7 @@ struct WorkshopDetailsView: View {
     let workshopId: UUID
     
     @State private var viewModel = WorkshopDetailsViewModel()
+    @Environment(MyScheduleViewModel.self) private var scheduleVM
     
     var body: some View {
         
@@ -29,7 +30,7 @@ struct WorkshopDetailsView: View {
                         VStack(alignment: .leading, spacing: 0) {
                             
                             ZStack {
-                                Color.accentBlue
+                                Color.secondaryPurple
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 185)
@@ -91,21 +92,48 @@ struct WorkshopDetailsView: View {
                     
                     VStack {
                         
+//                        Button {
+//                            Task {
+//                                if viewModel.isReserved {
+//                                    if let reservationID = viewModel.reservationID {
+//                                        await viewModel.cancelReservation(
+//                                            reservationID: reservationID
+//                                        )
+//                                    }
+//                                } else {
+//                                    await viewModel.reserveWorkshop(
+//                                        workshopID: workshopDetail.id
+//                                    )
+//                                }
+//                            }
+//                        }
                         Button {
                             Task {
                                 if viewModel.isReserved {
                                     if let reservationID = viewModel.reservationID {
+
                                         await viewModel.cancelReservation(
                                             reservationID: reservationID
                                         )
+
+                                        // Rafraîchir MyScheduleView après l'annulation réussie
+                                        if !viewModel.isReserved {
+                                            await scheduleVM.loadMySchedule()
+                                        }
                                     }
                                 } else {
                                     await viewModel.reserveWorkshop(
                                         workshopID: workshopDetail.id
                                     )
+
+                                    // Rafraîchir aussi après une réservation réussie
+                                    if viewModel.isReserved {
+                                        await scheduleVM.loadMySchedule()
+                                    }
                                 }
                             }
-                        } label: {
+                        }
+                        label: {
                             labelButton(
                                 label: viewModel.isReserved
                                 ? "Cancel reservation"
