@@ -20,7 +20,7 @@ struct redirectionToSignUpRow: View {
                 .foregroundStyle(.white)
             
             NavigationLink {
-//                SignUpView()
+                SignUpView()
             } label: {
                 Text("Sign-up")
                     .font(.custom("Inter18pt-Regular", size: 14))

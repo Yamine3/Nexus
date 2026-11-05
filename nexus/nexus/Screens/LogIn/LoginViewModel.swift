@@ -9,8 +9,8 @@ import Foundation
 
 @Observable
 final class LoginViewModel {
-    //à faire en singleton?
-    private let authService : AuthService
+//    //à faire en singleton?
+//    private let authService : AuthService
     
     // on doit stocker l'email
     var email = ""
@@ -26,13 +26,16 @@ final class LoginViewModel {
     
 
     //on initialise le service
-    init(
-        authService: AuthService = AuthService(webService: WebService())
-    ) {
-        self.authService = authService
-    }
+//    init(
+//        authService: AuthService = AuthService(webService: WebService())
+//    ) {
+//        self.authService = authService
+//    }
     
     func login(authService: AuthService) async {
+        
+        guard !isLoading else { return }
+        
         isLoading = true
         errorMessage = nil
         

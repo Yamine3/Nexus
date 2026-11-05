@@ -16,7 +16,12 @@ final class AuthService {
 
     init(webService: WebService) {
         self.webService = webService
+        //pour vérifier si un token existe déjà dans le keychain au lancement
+        if let token = try? KeychainManager.read(), !token.isEmpty {
+                self.isLoggedIn = true
+            }
     }
+
 
     func login(
         email: String,
@@ -42,5 +47,41 @@ final class AuthService {
         
         //le user est connecté
         isLoggedIn = true
+    }
+    
+    func signUp(
+        name: String,
+        email: String,
+        password: String
+    ) async throws {
+        
+        let signUpRequest = SignUpDTORequest(
+            name: name,
+            email: email,
+            password: password
+        )
+        
+        let response = try await webService.apiCall(
+            endpoint: "/users",
+            method: .post,
+            responseType:SignUpDTOResponse.self,
+            body: signUpRequest
+        )
+        
+        try KeychainManager.save(token: response.token)
+        
+        isLoggedIn = true 
+    }
+    
+    func logout() {
+        try? KeychainManager.delete()
+        isLoggedIn = false
+    }
+    
+    func handleError(_ error : Error) {
+        if let apiError = error as? APIError, case .unauthorized = apiError {
+            print("expired/invalid token: automatic log-out")
+            logout()
+        }
     }
 }
