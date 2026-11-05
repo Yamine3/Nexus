@@ -9,22 +9,26 @@ import SwiftUI
 
 struct MyScheduleView: View {
     
-    @State private var vm = MyScheduleViewModel()
-
+    @Environment(MyScheduleViewModel.self) private var scheduleVM
+    
     var body: some View {
         NavigationStack {
             Group {
-                if vm.isLoading {
+                if scheduleVM.isLoading {
                     ProgressView("Reservations loading...")
-                } else if let error = vm.errorMessage {
+                } else if let error = scheduleVM.errorMessage {
                     Text(error).foregroundStyle(.red)
-                } else if vm.reservations.isEmpty {
+                } else if scheduleVM.reservations.isEmpty {
                     Text("Aucune réservation")
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 15) {
-                            ForEach(vm.reservations) { reservation in
-                                ReservationCardComponent(reservation: reservation)
+                            ForEach(scheduleVM.reservations) { reservation in
+                                NavigationLink {
+                                    WorkshopDetailsView(workshopId: reservation.workshop.id)
+                                } label: {
+                                    WorkshopScheduleCard(reservation: reservation)
+                                }
                             }
                         }
                         .padding(.vertical)
@@ -32,14 +36,15 @@ struct MyScheduleView: View {
                     }
                 }
             }
-            .navigationTitle("Workshops")
+            .navigationTitle("My Schedule")
         }
         .task {
-            await vm.loadMySchedule()
+            await scheduleVM.loadMySchedule()
         }
     }
 }
 
 #Preview {
     MyScheduleView()
+        .environment(MyScheduleViewModel())
 }

@@ -96,6 +96,11 @@ final class WebService {
         let (data, response) = try await session.data(
             for: request
         )
+        if let httpResponse = response as? HTTPURLResponse {
+            print("🌐 URL:", request.url?.absoluteString ?? "")
+            print("📡 HTTP status:", httpResponse.statusCode)
+            print("📦 Response:", String(data: data, encoding: .utf8) ?? "")
+        }
         
         // On vérifie la réponse HTTP
         guard let httpResponse = response as? HTTPURLResponse else {

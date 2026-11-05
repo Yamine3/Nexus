@@ -10,7 +10,7 @@ import Foundation
 @Observable
 
 final class MyScheduleViewModel {
-   
+    
     private let reservationService = ReservationService()
     
     var reservations: [ReservationModel] = []
@@ -23,8 +23,11 @@ final class MyScheduleViewModel {
         
         print(" début chargement réservations")
         do {
-            reservations = try await reservationService.fetchReservations()
+            let fetchedReservations = try await reservationService.fetchReservations()
             
+            reservations = fetchedReservations.filter {
+                $0.status == .valid
+            }
             print("nbre de réservations :", reservations.count)
             
             for reservation in reservations {
@@ -50,4 +53,22 @@ final class MyScheduleViewModel {
             .map { $0.workshop }
     }
     
+    func cancelReservation(reservationID: UUID) async {
+        
+        do {
+            try await reservationService.cancelReservation(
+                reservationID: reservationID
+            )
+            
+            reservations.removeAll {
+                $0.id == reservationID
+            }
+            
+            print("Reservation removed from schedule")
+            
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Error cancelling reservation:", error)
+        }
+    }
 }

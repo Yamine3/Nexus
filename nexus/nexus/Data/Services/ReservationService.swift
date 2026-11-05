@@ -28,19 +28,50 @@ final class ReservationService {
         return reservations
     }
     
-    func createReservation(workshopID: UUID) async throws -> ReservationModel {
-        
+//    func createReservation(workshopID: UUID) async throws -> ReservationModel {
+//        
+//        guard let token = try KeychainManager.read() else {
+//            throw URLError(.userAuthenticationRequired)
+//        }
+//        
+//        let reservation: ReservationModel = try await webService.apiCall(
+//            endpoint: "/reservations/me",
+//            method: .post,
+//            responseType: ReservationModel.self,
+//            token: token
+//        )
+//        
+//        return reservation
+//    }
+    func createReservation(workshopID: UUID) async throws -> CreateReservationResponse {
+
         guard let token = try KeychainManager.read() else {
             throw URLError(.userAuthenticationRequired)
         }
-        
-        let reservation: ReservationModel = try await webService.apiCall(
-            endpoint: "/reservations/me",
+
+        let dto = CreateReservationDTO(
+            workshopID: workshopID
+        )
+
+        return try await webService.apiCall(
+            endpoint: "/reservations",
             method: .post,
-            responseType: ReservationModel.self,
+            responseType: CreateReservationResponse.self,
+            body: dto,
             token: token
         )
-        
-        return reservation
     }
+    func cancelReservation(reservationID: UUID) async throws {
+
+        guard let token = try KeychainManager.read() else {
+            throw URLError(.userAuthenticationRequired)
+        }
+
+        try await webService.apiCallVoid(
+            url: "http://127.0.0.1:8080/reservations/\(reservationID.uuidString)",
+            method: .delete,
+            token: token
+        )
+    }
+    
 }
