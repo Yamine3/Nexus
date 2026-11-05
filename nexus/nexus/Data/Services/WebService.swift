@@ -129,6 +129,9 @@ final class WebService {
 //            )
             return result
             
+        case 401:
+            throw APIError.unauthorized
+            
         default:
             throw URLError(.badServerResponse)
         }
@@ -158,8 +161,16 @@ final class WebService {
             throw URLError(.badServerResponse)
         }
         
-        guard (200...299).contains(httpResponse.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
+//        guard (200...299).contains(httpResponse.statusCode) else {
+//            throw URLError(.badServerResponse)
+//        }
+        switch httpResponse.statusCode {
+            case 200...299:
+                return
+            case 401:
+                throw APIError.unauthorized
+            default:
+                throw URLError(.badServerResponse)
+            }
     }
 }

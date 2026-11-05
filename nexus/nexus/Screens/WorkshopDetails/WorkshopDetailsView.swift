@@ -14,6 +14,7 @@ struct WorkshopDetailsView: View {
     let workshopId: UUID
     
     @State private var viewModel = WorkshopDetailsViewModel()
+    @Environment(AuthService.self) private var authService
     @Environment(MyScheduleViewModel.self) private var scheduleVM
     
     var body: some View {
@@ -113,22 +114,24 @@ struct WorkshopDetailsView: View {
                                     if let reservationID = viewModel.reservationID {
 
                                         await viewModel.cancelReservation(
-                                            reservationID: reservationID
+                                            reservationID: reservationID,
+                                            authService: authService
                                         )
 
                                         // Rafraîchir MyScheduleView après l'annulation réussie
                                         if !viewModel.isReserved {
-                                            await scheduleVM.loadMySchedule()
+                                            await scheduleVM.loadMySchedule(authService: authService)
                                         }
                                     }
                                 } else {
                                     await viewModel.reserveWorkshop(
-                                        workshopID: workshopDetail.id
+                                        workshopID: workshopDetail.id,
+                                        authService: authService
                                     )
 
                                     // Rafraîchir aussi après une réservation réussie
                                     if viewModel.isReserved {
-                                        await scheduleVM.loadMySchedule()
+                                        await scheduleVM.loadMySchedule(authService: authService)
                                     }
                                 }
                             }
@@ -181,8 +184,8 @@ struct WorkshopDetailsView: View {
             }
         }
         .task(id: workshopId) {
-            await viewModel.fetchWorkshopDetails(id: workshopId)
-            await viewModel.checkReservation(workshopID: workshopId)
+            await viewModel.fetchWorkshopDetails(id: workshopId, authService: authService)
+            await viewModel.checkReservation(workshopID: workshopId, authService: authService)
         }
         .toolbar(.hidden, for: .tabBar)
     }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MyScheduleView: View {
     
+    @Environment(AuthService.self) private var authService
     @Environment(MyScheduleViewModel.self) private var scheduleVM
     
     var body: some View {
@@ -39,12 +40,13 @@ struct MyScheduleView: View {
             .navigationTitle("My Schedule")
         }
         .task {
-            await scheduleVM.loadMySchedule()
+            await scheduleVM.loadMySchedule(authService: authService)
         }
     }
 }
 
 #Preview {
     MyScheduleView()
+        .environment(AuthService(webService: WebService()))
         .environment(MyScheduleViewModel())
 }

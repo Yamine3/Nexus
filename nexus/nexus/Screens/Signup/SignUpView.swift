@@ -9,10 +9,9 @@ import SwiftUI
 
 struct SignUpView: View {
     
+    @Environment(AuthService.self) private var authService
     
-    @State var name: String = ""
-    @State var email: String = ""
-    @State var password: String = ""
+    @State private var viewModel = SignUpViewModel()
     
     var body: some View {
         NavigationStack {
@@ -33,7 +32,7 @@ struct SignUpView: View {
                                 authentificationSubTitle(textFieldTitle: "Name")
                                 
                                 authentificationTextField(placeholderLogin: "Enter your name", textInTextField:
-                                                    $name)
+                                                            $viewModel.name)
                                 
                             }
                             
@@ -41,7 +40,10 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Email address")
                                 
-                                authentificationTextField(placeholderLogin: "Enter your email", textInTextField: $name)
+                                authentificationTextField(placeholderLogin: "Enter your email", textInTextField: $viewModel.email)
+                                    .keyboardType(.emailAddress)
+                                    .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
                                 
                             }
                             
@@ -49,7 +51,7 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Password")
                                 
-                                authentificationSecureField(placeholderLogin: "Enter your password", textInTextField: $email)
+                                authentificationSecureField(placeholderLogin: "Enter your password", textInTextField: $viewModel.password)
                                 
                             }
                             
@@ -57,17 +59,37 @@ struct SignUpView: View {
                                 
                                 authentificationSubTitle(textFieldTitle: "Retype password")
                                 
-                                authentificationSecureField(placeholderLogin: "Confirm your password", textInTextField: $email)
+                                authentificationSecureField(placeholderLogin: "Confirm your password", textInTextField: $viewModel.confirmPassword)
                                 
                             }
                         }
                         
                         VStack(spacing: 20) {
                             
-                            NavigationLink {
-                                WorkshopsView()
+                            Button {
+                                Task {
+                                    await viewModel.signUp(authService: authService)
+                                }
+                                
                             } label: {
-                                labelButton(label: "Sign-up", labelColor: .accentPurple, background: .white)
+                                
+                                labelButton(
+                                    label: viewModel.isLoading ? "Creating account..." : "Sign-up",
+                                    labelColor: .accentPurple,
+                                    background: .white
+                                )
+                            }
+                            .disabled(viewModel.isLoading)
+                            
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .tint(.white)
+                            }
+                            
+                            if let errorMessage = viewModel.errorMessage {
+                                Text(errorMessage)
+                                    .foregroundStyle(.red)
+                                    .font(.caption)
                             }
                             
                             redirectionToLogInRow(redirectionQuestion: "Already have an account ?")
@@ -81,10 +103,14 @@ struct SignUpView: View {
                 }
             }
             .ignoresSafeArea()
+            
         }
     }
 }
 
 #Preview {
     SignUpView()
+        .environment(
+            AuthService(webService: WebService())
+        )
 }

@@ -27,7 +27,7 @@ final class WorkshopDetailsViewModel {
 
     // MARK: - Fetch Workshop Details
 
-    func fetchWorkshopDetails(id: UUID) async {
+    func fetchWorkshopDetails(id: UUID, authService: AuthService) async {
 
         isFetchingDetails = true
         errorMessage = nil
@@ -42,6 +42,7 @@ final class WorkshopDetailsViewModel {
                 id: id
             )
         } catch {
+            authService.handleError(error)
             errorMessage = error.localizedDescription
             print("Fetch workshop details error:", error)
         }
@@ -49,7 +50,7 @@ final class WorkshopDetailsViewModel {
 
     // MARK: - Reservation
 
-    func reserveWorkshop(workshopID: UUID) async {
+    func reserveWorkshop(workshopID: UUID, authService: AuthService) async {
         
         print("🔵 Reserve workshop called:", workshopID)
 
@@ -73,12 +74,13 @@ final class WorkshopDetailsViewModel {
             print("Reservation created:", reservation.id)
 
         } catch {
+            authService.handleError(error)
             errorMessage = error.localizedDescription
             print("Reservation error:", error)
         }
     }
     
-    func cancelReservation(reservationID: UUID) async {
+    func cancelReservation(reservationID: UUID, authService: AuthService) async {
 
         do {
             try await reservationService.cancelReservation(
@@ -91,13 +93,14 @@ final class WorkshopDetailsViewModel {
             print("Reservation cancelled successfully")
 
         } catch {
+            authService.handleError(error)
             errorMessage = error.localizedDescription
             print("Error cancelling reservation:", error)
         }
     }
 
     
-    func checkReservation(workshopID: UUID) async {
+    func checkReservation(workshopID: UUID, authService: AuthService) async {
 
         print("🔍 Checking reservation for:", workshopID)
 
@@ -117,6 +120,7 @@ final class WorkshopDetailsViewModel {
             print("Is reserved:", isReserved)
 
         } catch {
+            authService.handleError(error)
             print("❌ Reservation check failed:", error)
             errorMessage = error.localizedDescription
         }

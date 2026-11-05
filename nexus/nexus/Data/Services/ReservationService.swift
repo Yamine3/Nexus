@@ -68,7 +68,7 @@ final class ReservationService {
         }
 
         try await webService.apiCallVoid(
-            url: "http://127.0.0.1:8080/reservations/\(reservationID.uuidString)",
+            url: "/reservations/\(reservationID.uuidString)",
             method: .delete,
             token: token
         )
