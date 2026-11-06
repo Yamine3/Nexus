@@ -19,8 +19,9 @@ import SwiftUI
 struct WorkshopScheduleCard: View {
     
     let reservation: ReservationModel
+    @State private var showCancelConfirmation = false
     @Environment(MyScheduleViewModel.self) var scheduleVM
-
+    
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -60,18 +61,38 @@ struct WorkshopScheduleCard: View {
                         
                         Spacer()
                         
-                            HStack {
-                                Button {
+                        HStack {
+                            
+                            Button {
+                                showCancelConfirmation = true
+                            } label: {
+                                labelLittleButton(
+                                    label: "Cancel",
+                                    labelColor: .white,
+                                    background: .accentRed
+                                )
+                            }
+                            .confirmationDialog(
+                                "Cancel reservation?",
+                                isPresented: $showCancelConfirmation,
+                                titleVisibility: .visible
+                            ) {
+                                Button("Yes, cancel reservation", role: .destructive) {
                                     Task {
                                         await scheduleVM.cancelReservation(
                                             reservationID: reservation.id
                                         )
                                     }
-                                } label: {
-                                    labelLittleButton(label: "Cancel", labelColor: .white, background: .accentRed)
                                 }
+                                
+                                Button("Keep reservation", role: .cancel) { }
+                                
+                            } message: {
+                                Text("Are you sure you want to cancel your reservation for this workshop?")
                             }
-                            .frame(width: 105)
+                            
+                        }
+                        .frame(width: 105)
                         
                     }
                     .frame(height: 40)
@@ -86,17 +107,4 @@ struct WorkshopScheduleCard: View {
         .frame(height: 135)
         .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 3)
     }
-}
-
-#Preview {
-    WorkshopScheduleCard(reservation: ReservationModel(id: UUID(), workshop: WorkshopModel(
-        id: UUID(),
-        name: "Introduction à Vapor & Swift Server",
-        startTime: Calendar.current.date(byAdding: .hour, value: 2, to: Date()) ?? Date(),
-        endTime: Calendar.current.date(byAdding: .hour, value: 4, to: Date()) ?? Date(),
-        capacityMax: 15,
-        remainingPlaces: 3,
-        category: "Backend"
-    ), status: StatusEnum.valid)
-    ).environment(AuthService(webService: WebService()))
 }

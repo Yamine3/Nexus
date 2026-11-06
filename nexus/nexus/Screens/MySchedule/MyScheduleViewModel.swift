@@ -17,7 +17,7 @@ final class MyScheduleViewModel {
     var isLoading = false
     var errorMessage: String?
     
-    func loadMySchedule(authService: AuthService) async {
+    func loadMySchedule(/*authService: AuthService*/) async {
         isLoading = true
         defer { isLoading = false }
         
@@ -34,7 +34,7 @@ final class MyScheduleViewModel {
                 print("wk:", reservation.workshop.name, "-", reservation.status.rawValue)
             }
         } catch {
-            authService.handleError(error)
+//            authService.handleError(error)
             errorMessage = "Erreur: \(error.localizedDescription)"
             print("erreur api:", error)
         }
@@ -54,7 +54,7 @@ final class MyScheduleViewModel {
             .map { $0.workshop }
     }
     
-    func cancelReservation(reservationID: UUID, authService: AuthService) async {
+    func cancelReservation(reservationID: UUID/*, authService: AuthService*/) async {
         
         do {
             try await reservationService.cancelReservation(
@@ -68,7 +68,7 @@ final class MyScheduleViewModel {
             print("Reservation removed from schedule")
             
         } catch {
-            authService.handleError(error)
+//            authService.handleError(error)
             errorMessage = error.localizedDescription
             print("Error cancelling reservation:", error)
         }

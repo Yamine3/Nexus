@@ -14,8 +14,19 @@ struct WorkshopDetailsView: View {
     let workshopId: UUID
     
     @State private var viewModel = WorkshopDetailsViewModel()
+    @State private var showCancelConfirmation = false
     @Environment(AuthService.self) private var authService
     @Environment(MyScheduleViewModel.self) private var scheduleVM
+    @Environment(WorkshopsViewModel.self) private var workshopVM
+    
+    
+    private var isFull: Bool {
+        guard let workshop = viewModel.workshopDetail else {
+            return false
+        }
+        
+        return workshop.remainingPlaces <= 0
+    }
     
     var body: some View {
         
@@ -92,66 +103,67 @@ struct WorkshopDetailsView: View {
                     }
                     
                     VStack {
-                        
-//                        Button {
-//                            Task {
-//                                if viewModel.isReserved {
-//                                    if let reservationID = viewModel.reservationID {
-//                                        await viewModel.cancelReservation(
-//                                            reservationID: reservationID
-//                                        )
-//                                    }
-//                                } else {
-//                                    await viewModel.reserveWorkshop(
-//                                        workshopID: workshopDetail.id
-//                                    )
-//                                }
-//                            }
-//                        }
                         Button {
-                            Task {
-                                if viewModel.isReserved {
-                                    if let reservationID = viewModel.reservationID {
-
-                                        await viewModel.cancelReservation(
-                                            reservationID: reservationID,
-                                            authService: authService
-                                        )
-
-                                        // Rafraîchir MyScheduleView après l'annulation réussie
-                                        if !viewModel.isReserved {
-                                            await scheduleVM.loadMySchedule(authService: authService)
-                                        }
-                                    }
-                                } else {
+                            if viewModel.isReserved {
+                                showCancelConfirmation = true
+                            } else {
+                                Task {
                                     await viewModel.reserveWorkshop(
-                                        workshopID: workshopDetail.id,
-                                        authService: authService
+                                        workshopID: workshopDetail.id
                                     )
-
-                                    // Rafraîchir aussi après une réservation réussie
+                                    
                                     if viewModel.isReserved {
-                                        await scheduleVM.loadMySchedule(authService: authService)
+                                        await workshopVM.loadWorkshops()
+                                        await viewModel.fetchWorkshopDetails(id: workshopId)
+                                        await scheduleVM.loadMySchedule()
                                     }
                                 }
                             }
-                        }
-                        label: {
+                        } label: {
                             labelButton(
                                 label: viewModel.isReserved
                                 ? "Cancel reservation"
+                                : isFull
+                                ? "Workshop full"
                                 : "Reserve a spot",
+                                
                                 labelColor: .white,
+                                
                                 background: viewModel.isReserved
                                 ? .accentRed
+                                : isFull
+                                ? .gray
                                 : .accentPurple
                             )
                         }
-                        .disabled(viewModel.isLoading)
-                        if let errorMessage = viewModel.errorMessage {
-                            Text(errorMessage)
-                                .font(.caption)
-                                .foregroundStyle(.red)
+                        .disabled(viewModel.isLoading || (isFull && !viewModel.isReserved))
+                        
+                        .confirmationDialog(
+                            "Cancel reservation?",
+                            isPresented: $showCancelConfirmation,
+                            titleVisibility: .visible
+                        ) {
+                            Button("Yes, cancel reservation", role: .destructive) {
+                                Task {
+                                    if let reservationID = viewModel.reservationID {
+                                        
+                                        await viewModel.cancelReservation(
+                                            reservationID: reservationID
+                                        )
+                                        
+                                        if !viewModel.isReserved {
+                                            await workshopVM.loadWorkshops()
+                                            await viewModel.fetchWorkshopDetails(id: workshopId)
+                                            await scheduleVM.loadMySchedule()
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            Button("Keep reservation", role: .cancel) { }
+                            
+                        } message: {
+                            Text("Are you sure you want to cancel your reservation for this workshop?")
                         }
                         
                     }
@@ -184,8 +196,8 @@ struct WorkshopDetailsView: View {
             }
         }
         .task(id: workshopId) {
-            await viewModel.fetchWorkshopDetails(id: workshopId, authService: authService)
-            await viewModel.checkReservation(workshopID: workshopId, authService: authService)
+            await viewModel.fetchWorkshopDetails(id: workshopId/*, authService: authService*/)
+            await viewModel.checkReservation(workshopID: workshopId/*, authService: authService*/)
         }
         .toolbar(.hidden, for: .tabBar)
     }
