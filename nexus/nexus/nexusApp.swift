@@ -9,9 +9,21 @@ import SwiftUI
 
 @main
 struct nexusApp: App {
+    
+    @State private var authService = AuthService(
+        webService: WebService()
+    )
+    
     var body: some Scene {
         WindowGroup {
-            WorkshopsView()
+            Group {
+                if authService.isLoggedIn {
+                    TabBarView()
+                } else {
+                    LoginView()
+                }
+            }
+            .environment(authService)
         }
     }
 }

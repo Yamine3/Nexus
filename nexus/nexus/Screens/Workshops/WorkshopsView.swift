@@ -8,11 +8,35 @@
 import SwiftUI
 
 struct WorkshopsView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    
+    @Environment(WorkshopsViewModel.self) private var workshopVM
 
-#Preview {
-    WorkshopsView()
+    var body: some View {
+        NavigationStack {
+            Group {
+                if workshopVM.isLoading {
+                    ProgressView("Workshops loading...")
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 15) {
+                            ForEach(workshopVM.workshops) { workshop in
+                                NavigationLink {
+                                    WorkshopDetailsView(workshopId: workshop.id)
+                                } label: {
+                                    WorkshopCard(workshop: workshop)
+                                }                           }
+                        }
+                        .padding(.vertical)
+                        .padding(.horizontal, 12)
+                    }
+                }
+            }
+            .navigationTitle("Workshops")
+        }
+        .task {
+            await workshopVM.loadWorkshops()
+        }
+        .environment(workshopVM)
+//        .toolbar(.hidden, for: .tabBar)
+    }
 }
