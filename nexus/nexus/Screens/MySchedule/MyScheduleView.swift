@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyScheduleView: View {
     
-    @Environment(AuthService.self) private var authService
+//    @Environment(AuthService.self) private var authService
     @Environment(MyScheduleViewModel.self) private var scheduleVM
     
     var body: some View {
@@ -20,7 +20,7 @@ struct MyScheduleView: View {
                 } else if let error = scheduleVM.errorMessage {
                     Text(error).foregroundStyle(.red)
                 } else if scheduleVM.reservations.isEmpty {
-                    Text("Aucune réservation")
+                    Text("You don't have any workshops booked")
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 15) {
@@ -40,13 +40,7 @@ struct MyScheduleView: View {
             .navigationTitle("My Schedule")
         }
         .task {
-            await scheduleVM.loadMySchedule(authService: authService)
+            await scheduleVM.loadMySchedule(/*authService: authService*/)
         }
     }
-}
-
-#Preview {
-    MyScheduleView()
-        .environment(AuthService(webService: WebService()))
-        .environment(MyScheduleViewModel())
 }

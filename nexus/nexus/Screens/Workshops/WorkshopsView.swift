@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WorkshopsView: View {
     
-    @State private var workshopVM = WorkshopsViewModel()
+    @Environment(WorkshopsViewModel.self) private var workshopVM
 
     var body: some View {
         NavigationStack {
@@ -39,8 +39,4 @@ struct WorkshopsView: View {
         .environment(workshopVM)
 //        .toolbar(.hidden, for: .tabBar)
     }
-}
-
-#Preview {
-    WorkshopsView()
 }

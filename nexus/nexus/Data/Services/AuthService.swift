@@ -17,9 +17,9 @@ final class AuthService {
     init(webService: WebService) {
         self.webService = webService
         //pour vérifier si un token existe déjà dans le keychain au lancement
-        if let token = try? KeychainManager.read(), !token.isEmpty {
-                self.isLoggedIn = true
-            }
+//        if let token = try? KeychainManager.read(), !token.isEmpty {
+//                self.isLoggedIn = true
+//            }
     }
 
 
